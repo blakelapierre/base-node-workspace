@@ -9,10 +9,10 @@ print() {
 
 print "Creating $1"
 
-git clone git@github.com:blakelapierre/base-node "$1" \
+git clone git@github.com:blakelapierre/base-node-workspace "$1" \
   && cd "$1" \
   && print "Setting upstream repo..." \
   && git remote rename origin upstream \
   && print "Installing dependencies..." \
   && npm install \
-  && npm install -g gulp gulpur \
+  && npm install -g gulp babel babel-preset-es2015 \

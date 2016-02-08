@@ -155,4 +155,4 @@ const paths = (function(base) {
     package: `${base}/.package`,
     project: base
   };
-})(process.argv[4] || '.');
+})(`./projects/${process.argv[4]}` || '.');
