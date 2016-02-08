@@ -38,7 +38,8 @@ gulp.task('run', () => run(`node ${paths.dist}/index.js ${args.args || ''}`).exe
 gulp.task('test', () => run(`node ${paths.dist}/tests/index.js ${args.args || ''}`).exec());
 
 gulp.task('watch', ['runtime'], () => gulp.watch(paths.script, ['runtime']));
-gulp.task('dev', ['start_dev'], () => gulp.watch(paths.scripts, ['start_dev']));
+gulp.task('dev', ['start_dev'], project => gulp.watch(paths.scripts, ['start_dev']));
+gulp.task('dev:test', ['start_dev:test'], project => gulp.watch(paths.scripts, ['start_dev:test']));
 
 gulp.task('transpile', ['jshint'],
   () => pipe([
@@ -62,17 +63,20 @@ gulp.task('runtime', ['transpile'],
   ])
   .on('error', function(e) { console.log(e); }));
 
+gulp.task('start_dev', ['runtime', 'copy', 'terminate'], launchAndWatch('index.js'));
+gulp.task('start_dev:test', ['runtime', 'copy', 'terminate'], launchAndWatch('tests/index.js'));
+
 let devChild = {process: undefined};
-gulp.task('start_dev', ['runtime', 'terminate'],
-  () => {
-    const process = devChild.process = child_process.fork(`./${paths.dist}/index.js`);
+function launchAndWatch(file) {
+  return () => {
+    const p = devChild.process = child_process.fork(`${file}`, {cwd: `${process.cwd()}/${paths.dist}`});
 
     devChild.doneFn = () => {
       const {emitter} = devChild;
       if (emitter) emitter.emit('end');
     };
 
-    process.on('exit', (code, signal) => {
+    p.on('exit', (code, signal) => {
       devChild.process = undefined;
       if (devChild.terminateFn) devChild.terminateFn();
     });
@@ -80,7 +84,8 @@ gulp.task('start_dev', ['runtime', 'terminate'],
     devChild.emitter = new events.EventEmitter();
 
     return devChild.emitter;
-  });
+  };
+}
 
 gulp.task('terminate',
   done => {
@@ -96,6 +101,13 @@ gulp.task('terminate',
     }
     else done();
   });
+
+gulp.task('copy',
+  () => pipe([
+    gulp.src(paths.others)
+    ,p('copy')
+    ,gulp.dest(paths.dist)
+  ]));
 
 gulp.task('uglify', ['bundle'],
   () => pipe([
@@ -133,8 +145,14 @@ gulp.task('clean',
     ,clean()
   ]));
 
-const paths = {
-  scripts: ['src/**/*.js'],
-  dist: '.dist',
-  package: '.package'
-};
+console.log(process.argv);
+
+const paths = (function(base) {
+  return {
+    scripts: [`${base}/src/**/*.js`],
+    others: [`${base}/src/**/*`, `!${base}/src/**/*.js`],
+    dist: `${base}/.dist`,
+    package: `${base}/.package`,
+    project: base
+  };
+})(process.argv[4] || '.');
