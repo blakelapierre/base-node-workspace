@@ -1,3 +1,2 @@
 #!/bin/bash
-
-ln -s ../../$1 projects/$1
+mkdir -p projects && ln -s ../../$1 projects/$1

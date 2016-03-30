@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#!! not ready for use !!
+
+trap "kill 0" SIGINT
+
+echo $1
+(gulp dev:test -p "$1") >&1 &
+pid=$!
+
+inotifywait -qme close_write . | while read path event file; do
+  echo $pid $file
+  if [ "$file" = "gulpfile.babel.js" ]; then
+     # this doesn't seem to kill the old jobs...
+    kill -s 9 $pid
+    (gulp dev:test -p "$1") >&1 &
+    pid=$!
+    echo $pid
+  elif [ "$file" = "dev_project" ]; then
+    kill -s 9 $pid
+    exec ./dev_project $*
+  fi
+done
