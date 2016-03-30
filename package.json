@@ -1,12 +1,14 @@
 {
   "name": "base-node-workspace",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Base Node.JS Development Environment Workspace",
   "repository": "https://github.com/blakelapierre/base-node-workspace",
   "main": "index.js",
   "author": "Blake La Pierre",
   "license": "MIT",
-  "bin": {"bnw": "./bin/bnw.sh"},
+  "bin": {
+    "bnw": "./bin/bnw.sh"
+  },
   "dependencies": {
     "babel-core": "^6.3.17",
     "babel-preset-es2015": "^6.3.13",
