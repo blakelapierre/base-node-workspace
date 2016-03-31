@@ -1,6 +1,6 @@
 {
   "name": "base-node-workspace",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Base Node.JS Development Environment Workspace",
   "repository": "https://github.com/blakelapierre/base-node-workspace",
   "main": "index.js",
