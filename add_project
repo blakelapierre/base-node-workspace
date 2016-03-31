@@ -1,2 +1,5 @@
 #!/bin/bash
-mkdir -p projects && ln -s ../../$1 projects/$1
+
+if [ ! -f "projects/$1" ]
+  then mkdir -p projects && ln -s "../../$1" "projects/$1"
+fi

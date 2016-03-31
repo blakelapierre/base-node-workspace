@@ -1,3 +1,5 @@
 #!/bin/bash
 
-unlink projects/$1
+if [ -f "projects/$1" ]
+  then unlink "projects/$1"
+fi
