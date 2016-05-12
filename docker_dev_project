@@ -1,0 +1,7 @@
+#!/bin/bash
+
+docker run --rm -it \
+  -v $(pwd):/workspace:z \
+  -v $(cd "projects/$1" && echo $(pwd -P)):"/workspace/staging/projects/$1":z \
+  blakelapierre/docker-node-inotify-tools:6 \
+    /bin/sh -c "cd /workspace && /workspace/dev_project $1"

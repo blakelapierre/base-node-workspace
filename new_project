@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PROJECT_NAME=$(basename $1)
+PROJECT_DIR="./.projects/$PROJECT_NAME"
+PROJECT_SRC=$PROJECT_DIR/src
+
+mkdir -p "$PROJECT_SRC" && \
+  (cd "$PROJECT_DIR" && printf "console.log('Hello, $PROJECT_NAME');" > src/index.js) && \
+  ./add_project $PROJECT_DIR && \
+  ./dev_project $PROJECT_NAME

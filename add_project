@@ -1,3 +1,14 @@
 #!/bin/bash
 
-[ -f "projects/$1" ] || mkdir -p projects && ln -s "../../$1" "projects/$1"
+#[ -f "projects/$1" ] || mkdir -p projects && ln -s "../../$1" "projects/$1"
+
+
+source_dir=$(pwd)/$1
+
+echo $source_dir
+
+if [ -d "$source_dir" ]; then
+  mkdir -p staging/projects && ln -s "$source_dir" staging/projects/$(basename $1) && cd staging/projects/$(basename $1) && npm install
+else
+  echo "No $source_dir"
+fi
